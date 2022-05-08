@@ -3,7 +3,7 @@
 
 # Features
 - Find song lyrics by entering artist and song name
-- Translate lyrics to another language
+- Translate lyrics to other languages
 
 
 # Technologies
