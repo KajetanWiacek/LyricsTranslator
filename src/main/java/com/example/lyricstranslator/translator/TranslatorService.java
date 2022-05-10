@@ -16,7 +16,7 @@ public class TranslatorService {
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("Accept-Encoding","application/gzip")
                 .header("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
-                .header("X-RapidAPI-Key", "7fd149338emsh1afbebb0024a4b0p18e215jsnb226dd9afd88")
+                .header("X-RapidAPI-Key", "") //Key
                 .method("POST", HttpRequest.BodyPublishers.ofString("source="+baseLang+"&target="+langTranslate
                         +"&q="+content))
                 .build();
