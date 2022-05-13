@@ -1,5 +1,8 @@
 package com.example.lyricstranslator.translator;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URI;
@@ -16,7 +19,7 @@ public class TranslatorService {
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("Accept-Encoding","application/gzip")
                 .header("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
-                .header("X-RapidAPI-Key", "") //Key
+                .header("X-RapidAPI-Key", "7fd149338emsh1afbebb0024a4b0p18e215jsnb226dd9afd88") //Key
                 .method("POST", HttpRequest.BodyPublishers.ofString("source="+baseLang+"&target="+langTranslate
                         +"&q="+content))
                 .build();
@@ -24,6 +27,15 @@ public class TranslatorService {
         HttpResponse<String> response = HttpClient.newHttpClient().
         send(request, HttpResponse.BodyHandlers.ofString());
 
-        return response.body();
+        return parseTranslationJson(response.body());
+    }
+
+    public static String parseTranslationJson(String content){
+        JSONObject contentObject = new JSONObject(content);
+        JSONObject data = contentObject.getJSONObject("data");
+        JSONArray translations = data.getJSONArray("translations");
+        JSONObject text = translations.getJSONObject(0);
+
+        return text.getString("translatedText");
     }
 }
