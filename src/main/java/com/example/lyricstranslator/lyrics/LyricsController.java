@@ -18,7 +18,7 @@ public class LyricsController {
     }
 
     @GetMapping("{artist}/{song}")
-    public ResponseEntity<String> getLyrics(@PathVariable("artist") String artist, @PathVariable("song") String song){
+    public ResponseEntity<String> getLyrics(@PathVariable("artist") String artist, @PathVariable("song") String song) {
         return new ResponseEntity<>(lyricsService.receiveLyrics(artist,song), HttpStatus.OK);
     }
 

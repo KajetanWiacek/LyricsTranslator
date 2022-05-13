@@ -1,41 +1,41 @@
 package com.example.lyricstranslator.lyrics;
 
 import com.example.lyricstranslator.translator.TranslatorService;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Service
 public class LyricsService {
-    private final RestTemplate restTemplate;
-    private final List<HttpMessageConverter<?>> messageConverters;
-
-    private final MappingJackson2HttpMessageConverter converter;
-
-    public LyricsService() {
-        this.restTemplate = new RestTemplate();
-        this.messageConverters = new ArrayList<>();
-        this.converter = new MappingJackson2HttpMessageConverter();
-    }
 
     public String receiveLyrics(String artist, String song){
-        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-        messageConverters.add(converter);
-        restTemplate.setMessageConverters(messageConverters);
-        Lyrics lyrics = restTemplate.getForObject("https://api.lyrics.ovh/v1/"+artist+"/"+song,Lyrics.class);
+        String url = "https://api.lyrics.ovh/v1/"+artist+"/"+song;
+        String fixedUrl = url.replace(" ","%20");
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fixedUrl))
+                .build();
 
-        return lyrics.getLyrics().replace("\n"," ");
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient().
+            send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject lyricsObj = new JSONObject(response.body());
+        String lyrics = lyricsObj.getString("lyrics");
+
+        return lyrics.replace("\n"," ").replace("\r"," ");
     }
 
-    public String lyricsTranslation(TranslateRequest request) throws IOException, InterruptedException {
+    public String lyricsTranslation(TranslateRequest request){
         String lyrics = receiveLyrics(request.getArtist(),request.getSong());
 
         return TranslatorService.translate(lyrics,request.getBaseLang(),request.getTrLang());

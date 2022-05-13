@@ -12,20 +12,26 @@ import java.net.http.HttpResponse;
 
 @Service
 public class TranslatorService {
-    public static String translate(String content,String baseLang, String langTranslate)
-            throws IOException, InterruptedException {
+    public static String translate(String content,String baseLang, String langTranslate) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://google-translate1.p.rapidapi.com/language/translate/v2"))
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("Accept-Encoding","application/gzip")
                 .header("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
-                .header("X-RapidAPI-Key", "7fd149338emsh1afbebb0024a4b0p18e215jsnb226dd9afd88") //Key
+                .header("X-RapidAPI-Key", "") //Key
                 .method("POST", HttpRequest.BodyPublishers.ofString("source="+baseLang+"&target="+langTranslate
                         +"&q="+content))
                 .build();
 
-        HttpResponse<String> response = HttpClient.newHttpClient().
-        send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient().
+            send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return parseTranslationJson(response.body());
     }
