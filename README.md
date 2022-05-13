@@ -10,6 +10,8 @@
 - Java
 - Spring
 
-#APIs used
+# APIs used
 - Google translate API
 - lyrics.ovh API
+
+In order to use translation function it's needed to set the key for translate API.
