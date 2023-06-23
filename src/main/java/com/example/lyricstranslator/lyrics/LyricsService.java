@@ -1,6 +1,7 @@
 package com.example.lyricstranslator.lyrics;
 
 import com.example.lyricstranslator.translator.TranslatorService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -11,33 +12,33 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @Service
+@RequiredArgsConstructor
 public class LyricsService {
+  private final TranslatorService translatorService;
 
-    public String receiveLyrics(String artist, String song){
-        String url = "https://api.lyrics.ovh/v1/"+artist+"/"+song;
-        String fixedUrl = url.replace(" ","%20");
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fixedUrl))
-                .build();
+  public String receiveLyrics(String artist, String song) {
+    String url = "https://api.lyrics.ovh/v1/" + artist + "/" + song;
+    String fixedUrl = url.replace(" ", "%20");
+    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(fixedUrl)).build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = HttpClient.newHttpClient().
-            send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject lyricsObj = new JSONObject(response.body());
-        String lyrics = lyricsObj.getString("lyrics");
-
-        return lyrics.replace("\n"," ").replace("\r"," ");
+    HttpResponse<String> response = null;
+    try {
+      response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
 
-    public String lyricsTranslation(TranslateRequest request){
-        String lyrics = receiveLyrics(request.getArtist(),request.getSong());
+    JSONObject lyricsObj = new JSONObject(response.body());
+    String lyrics = lyricsObj.getString("lyrics");
 
-        return TranslatorService.translate(lyrics,request.getBaseLang(),request.getTrLang());
-    }
+    return lyrics.replace("\n", " ").replace("\r", " ");
+  }
+
+  public String lyricsTranslation(TranslateRequest request) {
+    String lyrics = receiveLyrics(request.getArtist(), request.getSong());
+
+    return translatorService.translate(lyrics, request.getBaseLang(), request.getTrLang());
+  }
 }
