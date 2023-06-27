@@ -1,11 +1,11 @@
 package com.example.lyricstranslator.lyrics;
 
+import com.example.lyricstranslator.lyrics.dto.LyricsView;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/lyrics")
@@ -13,16 +13,13 @@ import java.io.IOException;
 public class LyricsController {
   private final LyricsService lyricsService;
 
-  @GetMapping("{artist}/{song}")
-  public ResponseEntity<String> getLyrics(
-      @PathVariable("artist") String artist, @PathVariable("song") String song) {
-    return new ResponseEntity<>(lyricsService.receiveLyrics(artist, song), HttpStatus.OK);
+  @GetMapping
+  public LyricsView getLyrics(@RequestParam String phrase) {
+    return lyricsService.getLyrics(phrase);
   }
 
-  @PostMapping
-  public ResponseEntity<String> translateLyrics(@RequestBody TranslateRequest request)
-      throws IOException, InterruptedException {
-    String content = lyricsService.lyricsTranslation(request);
-    return new ResponseEntity<>(content, HttpStatus.OK);
+  @GetMapping("/translate")
+  public LyricsView translateLyrics(@RequestParam String phrase, @RequestParam String targetLang) {
+    return lyricsService.translateLyrics(phrase, targetLang);
   }
 }
