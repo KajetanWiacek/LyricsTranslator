@@ -1,4 +1,4 @@
-package com.example.lyricstranslator;
+package com.example.lyricstranslator.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

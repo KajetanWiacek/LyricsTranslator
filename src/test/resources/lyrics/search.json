@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "status": 200
+  },
+  "response": {
+    "hits": [
+      {
+        "highlights": [],
+        "index": "song",
+        "type": "song",
+        "result": {
+          "artist_names": "Rick Astley",
+          "title": "Never Gonna Give You Up",
+          "url": "https://test/never-gonna-give-you-up",
+          "language": "en"
+        }
+      },
+      {
+        "highlights": [],
+        "index": "song",
+        "type": "song",
+        "result": {
+          "artist_names": "Livin' On A Prayer",
+          "title": "Bon Jovi",
+          "url": "https://test/livin-on-a-prayer",
+          "language": "en"
+        }
+      },
+      {
+        "highlights": [],
+        "index": "song",
+        "type": "song",
+        "result": {
+          "artist_names": "Eddie Murphy",
+          "title": "Party All the Time",
+          "url": "https://test/party-all-the-time",
+          "language": "en"
+        }
+      }
+    ]
+  }
+}

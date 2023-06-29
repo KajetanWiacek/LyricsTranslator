@@ -40,7 +40,7 @@ public class TranslatorService {
     HttpEntity<TranslateCommand> entity = new HttpEntity<>(translateCommand, headers);
 
     TranslateView translateView =
-        restTemplate.exchange(uri, HttpMethod.GET, entity, TranslateView.class).getBody();
+        restTemplate.exchange(uri, HttpMethod.POST, entity, TranslateView.class).getBody();
 
     return Optional.ofNullable(translateView);
   }
